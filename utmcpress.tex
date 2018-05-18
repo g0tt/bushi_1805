@@ -1,0 +1,71 @@
+﻿﻿%
+% 親…みたいな。
+%
+\documentclass[11pt]{utmcpress}
+
+\include{includes/header}
+
+%
+% 追加するマクロとかは以下に。
+%
+
+\begin{document}
+
+\pagestyle{empty}
+% 印刷時には表紙はカラーコピー機で印刷するので、一枚目は印刷しないこと！
+\fullimage{}{images/cover.eps}
+\newpage
+\include{includes/shouhyou}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 巻頭言・目次
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+\pagestyle{plain}
+\include{includes/preface}
+
+\utmctableofcontents
+% クラスファイルデフォルトの\cleardoublepageだとノンブルが付かないので追加 by Orios [2008-03-22]
+\makeatletter
+\ifodd\c@page \else
+  ~\newpage
+\fi
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 記事本文
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\pagestyle{headings}
+
+% 記事名 - 著者名
+% といった感じのコメントを添えておくと管理しやすいかも。
+\utmcinclude{sample}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 編集後記
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\@mainmatterfalse
+\pagestyle{plain}
+\include{includes/postscript}
+
+% ページ数が4の倍数になるように調整 by Orios [2008-03-22]
+\outputextrapage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 奥付
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{picture}(0,0)
+	% 位置指定は手動調整
+	\put(-56, -703){\includegraphics[width=\paperwidth,height=\paperheight]{images/backcover.eps}}
+\end{picture}
+\input{includes/okuduke}
+\newpage
+
+\end{document}
+

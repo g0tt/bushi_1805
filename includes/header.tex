@@ -1,0 +1,64 @@
+%
+% 記事の一般情報(パッケージの読み込みや担当者等々)を記述する
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 使用パッケージ
+% 
+% 環境によってはコンパイルが通らない場合があります。
+% その場合には適宜コメントアウトをしてください。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amssymb,bm,type1cm}
+\usepackage{okumacro}
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+\usepackage{longtable}
+\usepackage{puyopuyo}
+\usepackage{url}
+\usepackage{ulem}
+\usepackage[yen]{okuverb}
+\usepackage{utmcpicins}
+\usepackage[dvipdfmx]{graphicx,color,colortbl}
+\usepackage{graphicx,url,picins}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage[scaled]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{eepic}
+\usepackage{utmcbarcode}
+\usepackage{moreverb}
+\usepackage{eclbkbox}
+\usepackage{framed}
+\usepackage{otf}
+\usepackage{ascmac}
+\usepackage{watermark}
+\usepackage{layout}
+\usepackage{listings, jlisting}
+\usepackage{here}
+
+\pagestyle{headings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 書籍情報の登録
+%     by Orios [2008-03-14]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1. 書籍情報
+% \volumeinfo{発行年}{月}{日}{分冊番号}{エイリアス}
+% ※ 月・日・分冊番号に余計な0をつけない！
+%   ○ 4  × 04
+\volumeinfo{1}{1}{1}{1}{◯◯部誌}
+% 2. 印刷年月日
+% \printdate{年}{月}{日}
+\printdate{1}{1}{1}
+% 3. Cコード・値段
+% \pressinfo{Cコード}{値段}
+%   [Cコード]
+%     9(1ケタ目): 雑誌
+%     4(2ケタ目): ムック・その他
+%     04(3,4ケタ目): 情報科学
+\pressinfo{9404}{0}
+% 4. スタッフの名前をここに。 by hyuga [2009-05-01]
+\staffinfo{編集担}{絵師たん}
+

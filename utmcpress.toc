@@ -1,0 +1,23 @@
+\contentsline {chapter}{\raise .06zw\hbox {\unhbox \voidb@x \setbox \@tempboxa \hbox {\color@begingroup \kern \fboxsep {1}\kern \fboxsep \endgraf \endgroup }\@tempdima \fboxrule \advance \@tempdima \fboxsep \advance \@tempdima \dp \@tempboxa \hbox {\lower \@tempdima \hbox {\vbox {\hrule height\fboxrule \hbox {\vrule width\fboxrule \relax \vbox {\vskip \fboxsep \box \@tempboxa \vskip \fboxsep }\relax \vrule width\fboxrule }\hrule height\fboxrule }}}}\hskip .5zwUTMC Press Manual\hskip 1em plus 10em \penalty 0\unhbox \voidb@x \hbox {\textrm {---}\tmspace +\thinmuskip {.1667em}Anonymous}}{1}
+\contentsline {section}{\numberline {1.}はじめに}{1}
+\contentsline {subsection}{\numberline {1.1}これはなに？}{1}
+\contentsline {subsection}{\numberline {1.2}動作環境について}{1}
+\contentsline {subsection}{\numberline {1.3}構成}{1}
+\contentsline {section}{\numberline {2.}執筆者向け}{2}
+\contentsline {subsection}{\numberline {2.1}記事の書き方}{2}
+\contentsline {subsubsection}{\numberline {2.1.1}\TeX のおべんきょ}{2}
+\contentsline {subsubsection}{\numberline {2.1.2}記事を決める}{2}
+\contentsline {subsubsection}{\numberline {2.1.3}記事の英語表記を決める}{2}
+\contentsline {subsubsection}{\numberline {2.1.4}環境整備}{3}
+\contentsline {subsubsection}{\numberline {2.1.5}書く}{3}
+\contentsline {subsection}{\numberline {2.2}エンコーディングについて}{3}
+\contentsline {subsection}{\numberline {2.3}画像について}{3}
+\contentsline {subsubsection}{\numberline {2.3.1}画像形式について}{3}
+\contentsline {subsubsection}{\numberline {2.3.2}ファイル名指定}{4}
+\contentsline {subsection}{\numberline {2.4}ソースコードについて}{4}
+\contentsline {subsection}{\numberline {2.5}コンパイル}{4}
+\contentsline {subsection}{\numberline {2.6}原稿提出}{5}
+\contentsline {section}{\numberline {3.}編集担向け}{6}
+\contentsline {subsection}{\numberline {3.1}記事の処理の仕方}{6}
+\contentsline {subsection}{\numberline {3.2}ディレクトリ構成の理念}{6}
+\contentsline {subsection}{\numberline {3.3}現在のレイアウト}{7}

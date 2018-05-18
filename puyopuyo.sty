@@ -1,0 +1,100 @@
+﻿% 配置するぷよぷよの見栄えはここで定義。
+% \putpuyoO は、おじゃまぷよ。\putpuyonull は、なにも配置しない場所。
+% ユーザはこれを直接使わずに、\putpuyoコマンドを使うようにしてください。
+\def\putpuyoA{▲}
+\def\putpuyoB{□}
+\def\putpuyoC{★}
+\def\putpuyoD{×}
+\def\putpuyoO{○}
+\def\putpuyonull{\phantom{\putpuyoA}}
+
+\def\puyonewline{\\[-0.35em]}
+
+% ぷよぷよの組みを表示。
+\newcommand{\puyocons}[2]{
+	\Ovalbox{
+		\begin{tabular}[b]{@{} c @{}}
+			\putpuyo{#1} \puyonewline
+			\putpuyo{#2} \puyonewline
+		\end{tabular}
+	}
+}
+% NEXTぷよを表示。書式は \puyonext{A}{B}{C}{D} みたいな感じ。
+\newcommand{\puyonext}[4]{
+	\begin{tabular}[b]{@{} c @{}}
+		\puyocons{#1}{#2} \\
+		\puyocons{#3}{#4}
+	\end{tabular}
+}
+
+% ぷよぷよのフィールド。使い方は、
+% \begin{puyofield}
+%     \puyotoprow{ }{O}{ }{ }{ }{ }
+%     \puyorow   {O}{A}{ }{C}{ }{ }
+%     ...
+%     \puyorow   {A}{B}{C}{D}{D}{A}
+% \end{puyofield}
+\newenvironment{puyofield}[0]
+{
+	\begin{minipage}{6em}
+		\begin{tabular}{|@{} c @{} c @{} c @{} c @{} c @{} c @{}|}
+		\hline
+}
+{
+		\hline \hline
+		\end{tabular}
+	\end{minipage}
+}
+
+% ぷよぷよを単独で配置するコマンド。
+\def\putpuyo#1{%
+	\def\symputpuyoarg{#1}%
+%
+	\def\sympuyoA{a}%
+	\def\sympuyoB{b}%
+	\def\sympuyoC{c}%
+	\def\sympuyoD{d}%
+	\def\sympuyoO{o}%
+	\def\sympuyonull{ }%
+%
+	\ifx \symputpuyoarg\sympuyonull \putpuyonull%
+	\else \ifx \symputpuyoarg\sympuyoA \putpuyoA%
+	\else \ifx \symputpuyoarg\sympuyoB \putpuyoB%
+	\else \ifx \symputpuyoarg\sympuyoC \putpuyoC%
+	\else \ifx \symputpuyoarg\sympuyoD \putpuyoD%
+	\else \ifx \symputpuyoarg\sympuyoO \putpuyoO%
+	\else \symputpuyoarg%
+	\fi\fi\fi%
+	\fi\fi\fi%
+}
+
+% puyofield環境で、ぷよぷよを1行分配置するコマンド。
+\newcommand{\puyorow}[6]{
+	\putpuyo{#1}
+	& \putpuyo{#2}
+	& \putpuyo{#3}
+	& \putpuyo{#4}
+	& \putpuyo{#5}
+	& \putpuyo{#6}
+	\puyonewline
+}
+
+% 全部空白のフィールドを配置するコマンド。
+\newcommand{\puyofieldblank}[0]{
+	\begin{puyofield}
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\hline
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+		\puyorow{ }{ }{ }{ }{ }{ }
+	\end{puyofield}
+}

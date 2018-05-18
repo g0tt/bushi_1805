@@ -1,0 +1,571 @@
+﻿%==================================================
+%
+%  裏表紙用のバーコードを生成するマクロ群 by Orios [2008-03-14]
+%
+%==================================================
+
+%使用するパッケージ(a.texでインクルード済み)
+% \usepackage{eepic}
+
+\makeatletter
+
+% モジュール寸法
+\newdimen\modulelen
+\modulelen=.38mm % A4 -> B5 の縮小を考慮
+
+% 2ケタに満たない数字を`0'で埋めて2ケタにするマクロ
+\newcommand{\twodigits}[1]{\ifnum#1<10 0#1\else#1\fi}
+
+% 書誌情報を登録するマクロ
+%  Usage: \pressinfo{Cコード}{値段}
+\newcommand{\pressinfo}[2]{%
+  \def\ccode{#1}
+  \def\utmcprice{#2}}
+
+% 上段のバーコードを出力するマクロ
+\newcommand{\utmcbarcodeA}{%
+  \barcode{9784\issueyear\twodigitissuemonth\twodigitvolume}}
+
+% 下段のバーコードを出力するマクロ
+\newcommand{\utmcbarcodeB}{%
+  \ifnum\utmcprice<10
+    \barcode{192\ccode0000\utmcprice}
+  \else\ifnum\utmcprice<100
+    \barcode{192\ccode000\utmcprice}
+  \else\ifnum\utmcprice<1000
+    \barcode{192\ccode00\utmcprice}
+  \else\ifnum\utmcprice<10000
+    \barcode{192\ccode0\utmcprice}
+  \else
+    \barcode{192\ccode\utmcprice}
+  \fi\fi\fi\fi}
+
+% チェックデジット(モジュラス10ウェイト3)を計算するマクロ群
+%  Usage: \checkdigit{12ケタの数字}
+\newif\if@evendigit
+\@evendigitfalse
+\newcount\@digitsum
+\newcount\@tmpcount
+\@digitsum=0
+\def\@end{}
+\newcommand{\checkdigit}[1]{%
+  \newcount\@@checkdigit
+  \expandafter\@checkdigit#1\@end\@end
+  \@tmpcount=\the\@digitsum
+  \divide \@tmpcount by 10
+  \multiply \@tmpcount by 10
+  \advance \@digitsum by -\@tmpcount
+  \ifnum\the\@digitsum=0
+    \@@checkdigit=0
+  \else
+    \@@checkdigit=10
+    \advance \@@checkdigit by -\@digitsum
+  \fi\the\@@checkdigit}
+\def\@checkdigit#1{%
+  \ifx#1\@end \let\@next=\relax \else
+    \if@evendigit
+      \@evendigitfalse
+      \@tmpcount=#1
+      \multiply \@tmpcount by 3
+      \advance \@digitsum by \@tmpcount
+    \else
+      \@evendigittrue
+      \advance \@digitsum by #1
+    \fi
+    \let\@next=\@checkdigit
+  \fi\expandafter\@next}
+
+% バーコード(JAN-13)を出力するマクロ群
+%  (チェックデジットは自動計算)
+%  Usage: \barcode{12ケタの数字}
+\newcount\@barposa
+\newcount\@barcodecharpos
+\newcount \@prefix
+\@barposa=-1
+\@barcodecharpos=12
+\@prefix=0
+\newcommand{\barcode}[1]{%
+  \unitlength=\modulelen
+  \begin{picture}(113,45)
+    \allinethickness{\modulelen}
+    \put(10,10){\line(0,1){35}}
+    \put(12,10){\line(0,1){35}}
+    \put(56,10){\line(0,1){35}}
+    \put(58,10){\line(0,1){35}}
+    \put(102,10){\line(0,1){35}}
+    \put(104,10){\line(0,1){35}}
+    \newcount\@@checkdigit
+    \expandafter\@barcode#1\@end\@end
+    \@tmpcount=\the\@digitsum
+    \divide \@tmpcount by 10
+    \multiply \@tmpcount by 10
+    \advance \@digitsum by -\@tmpcount
+    \ifnum\the\@digitsum=0
+      \@@checkdigit=0
+    \else
+      \@@checkdigit=10
+      \advance \@@checkdigit by -\@digitsum
+    \fi\@@barcode{\the\@@checkdigit}{11}
+    \put(\@barcodecharpos,0){\the\@@checkdigit}
+  \end{picture}}
+\def\@barcode#1{%
+  \ifx#1\@end \let\@next=\relax \else
+    \if@evendigit
+      \@evendigitfalse
+      \@tmpcount=#1
+      \multiply \@tmpcount by 3
+      \advance \@digitsum by \@tmpcount
+    \else
+      \@evendigittrue
+      \advance \@digitsum by #1
+    \fi
+    \ifnum\the\@barposa=-1
+      \@prefix=#1
+    \else
+      \@@barcode{#1}{\the\@barposa}
+    \fi
+    \advance \@barposa by 1
+    \put(\@barcodecharpos,0){#1}
+    \advance \@barcodecharpos by 7
+    \let\@next=\@barcode
+  \fi\expandafter\@next}
+\def\numname#1{\ifcase#1 zero\or one\or two\or three\or four\or five\or six\or seven\or eight\or nine\fi}
+\newcount \@barposb
+\@barposb=0
+% 指定された桁のバーコードを表示させるマクロ
+%  Usage: \@@barcode<数字><桁(位置)>
+\def\@@barcode#1#2{%
+  \@barposb=#2
+  \multiply \@barposb by 7
+  \ifnum#2<6
+    \advance \@barposb by 13
+    \ifcase#2
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \or
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \or
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \or
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \or
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \or
+      \ifcase\@prefix
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeel\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \or
+        \csname @barcodeol\numname{#1}\endcsname{\the\@barposb}
+      \fi
+    \fi
+  \else
+    \advance \@barposb by 18
+    \csname @barcodeer\numname{#1}\endcsname{\the\@barposb}
+  \fi}
+
+% 実際にバーコードを出力するマクロ群
+\newcount \@barposc
+\@barposc=0
+% 奇数パリティ
+\def\@barcodeolzero#1{%
+  \@barposc=#1
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolone#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeoltwo#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolthree#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolfour#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 4
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolfive#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 4
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolsix#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolseven#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeoleight#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeolnine#1{%
+  \@barposc=#1
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+% 左側偶数パリティ
+\def\@barcodeelzero#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelone#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeeltwo#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelthree#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 5
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelfour#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelfive#1{%
+  \@barposc=#1
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelsix#1{%
+  \@barposc=#1
+  \advance \@barposc by 4
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelseven#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 4
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeeleight#1{%
+  \@barposc=#1
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeelnine#1{%
+  \@barposc=#1
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+% 右側偶数パリティ
+\def\@barcodeerzero#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeerone#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeertwo#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeerthree#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 5
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeerfour#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeerfive#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeersix#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeerseven#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 4
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeereight#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 3
+  \put(\@barposc,10){\line(0,1){35}}
+}
+\def\@barcodeernine#1{%
+  \@barposc=#1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 1
+  \put(\@barposc,10){\line(0,1){35}}
+  \advance \@barposc by 2
+  \put(\@barposc,10){\line(0,1){35}}
+}
+
+\makeatother

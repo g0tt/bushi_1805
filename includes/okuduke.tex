@@ -1,0 +1,85 @@
+﻿%
+%UTMC部誌 TeX・奥付ファイル
+%
+%"okuduke.sty"
+%
+%Written by Sword
+%Apr. 1,1996
+%
+%Modified by flatline 2004-04-01
+%Modified by nya 2005-01-20
+%Modified by Orios 2008-03-14
+
+\makeatletter
+
+\makeatother
+
+\thispagestyle{empty}
+{\sffamily\large
+\hfill \utmcbarcodeA\\
+
+\hfill \utmcbarcodeB\\
+
+\hfill UTMCBN978-4-\issueyear-\twodigits{\issuemonth}\twodigits{\thevolume}-\checkdigit{9784\issueyear\twodigitissuemonth\twodigitvolume}\hspace{1em}C\ccode\hspace{1em}\textyen \utmcprice E\\
+\hfill 定価（本体オープン価格 + 税）}
+\vfill
+\vfill
+\vfill
+\begin{center}
+
+\Large \textbf{UTMC\,Press \issueyear 年\issuemonth 月号}
+
+\textbf{（\issuealias ）}
+\end{center}
+\begin{center}
+	\rule{28zw}{1pt}\\
+	\vspace{.5zw}
+	\renewcommand{\arraystretch}{0.9}
+	\begin{tabular*}{28zw}{cl}
+		\multicolumn{2}{l}{\printyear 年\hskip\xkanjiskip\hbox to 1em{\hfil \printmonth}\hskip\xkanjiskip 月\hskip\xkanjiskip\hbox to 1em{\hfil \printday}\hskip\xkanjiskip 日　初版印刷}	\\
+		\multicolumn{2}{l}{\issueyear 年\hskip\xkanjiskip\hbox to 1em{\hfil \issuemonth}\hskip\xkanjiskip 月\hskip\xkanjiskip\hbox to 1em{\hfil \issueday}\hskip\xkanjiskip 日　初版発行}	\\[5mm]
+		編　集 & \editor		\\
+		表　紙 & \hyoshi		\\
+		印　刷 & UTMC印刷局	\\
+		発行所 & 東大マイコンクラブ\quad (UTMC)	\\
+			& \begin{tabular}{@{}ll}
+			〒153-0041 & 東京都目黒区駒場3丁目8番1号	\\
+				& 東京大学教養学部 学生会館303号	\\
+			電　話 & 03\, (5454)\, 4343（呼）	\\
+			e-mail & \url{support@komaba.utmc.or.jp}	\\ % requires url.sty
+			URL & \url{http://www.komaba.utmc.or.jp/}	
+		\end{tabular}\\
+	\end{tabular*}\\
+	\vspace{.5zw}
+	\rule{28zw}{1pt}
+	\hbox to 27zw{\small \copyright \issueyear~UTMC\hfill \normalsize Printed in Japan}
+	\hbox to 27zw{\small 落丁・乱丁は残部のある限りお取り替え致します。\hfill}
+\end{center}
+
+%\vspace{\baselineskip}
+%\begin{center}
+%	\begin{tabular}{cl}
+%		\multicolumn{2}{r}{2008年3月2x日印刷}	\\
+%		\multicolumn{2}{r}{2008年4月x日発行}	\\
+%		\hline
+%		編　集 & Orios		\\
+%		表　紙 & alumi		\\
+%		印　刷 & UTMC印刷局	\\
+%		発行所 & 東京大学マイコンクラブ\quad (UTMC)	\\
+%			& \begin{tabular}{@{}ll}
+%			〒153-0041 & 東京都目黒区駒場3丁目8番1号	\\
+%				& 東京大学教養学部 学生会館303号	\\
+%			電　話 & 03\, (5454)\, 4343 \quad (呼)	\\
+%			e-mail & \url{support@komaba.utmc.or.jp}	\\ % requires url.sty
+%			URL & \url{http://www.komaba.utmc.or.jp/}	\\
+%		\end{tabular} \\
+%		\hline
+%	\end{tabular}
+%	\medskip
+%
+%	{\small 落丁・乱丁は残部のある限りお取り替え致します。}
+%\end{center}
+
+\vfill
+%{\footnotesize UTMCBN\number\year--\number\month\, \arabic{volume}} \hfill
+%{\small 定価: オープン価格 (本体: 時価)}

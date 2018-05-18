@@ -1,0 +1,81 @@
+% 記事のプレビュー用 TeX ファイル
+%
+\documentclass[11pt]{utmcpress}
+
+%
+% 記事の一般情報(パッケージの読み込みや担当者等々)を記述する
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 使用パッケージ
+% 
+% 環境によってはコンパイルが通らない場合がありますので、
+% その場合には適宜コメントアウトをしてください。
+% なお、コンパイル時間節約のために最低限必要なもの以外はコメントアウトしています。
+% 適宜コメントアウトを外してください。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{puyopuyo}
+\usepackage{utmcbarcode}
+\usepackage{utmcpicins}
+\usepackage{eclbkbox}
+\usepackage{watermark}
+\usepackage{amsmath,amssymb,bm,type1cm}
+\usepackage{okumacro}
+\usepackage{layout}
+%\usepackage{fancybox}
+%\usepackage{fancyvrb}
+%\usepackage{longtable}
+\usepackage{url}
+%\usepackage{ulem}
+%\usepackage[yen]{okuverb}
+\usepackage[dvipdfm]{graphicx,color,colortbl}
+\usepackage{graphicx,url,picins}
+%\usepackage{verbatim}
+%\usepackage{longtable}
+%\usepackage{wrapfig}
+%\usepackage[scaled]{helvet}
+%\usepackage[T1]{fontenc}
+%\usepackage{textcomp}
+%\usepackage{eepic}
+\usepackage{moreverb}
+%\usepackage{framed}
+\usepackage{otf}
+%\usepackage{ascmac}
+\usepackage{listings, jlisting}
+
+\pagestyle{headings}
+
+\volumeinfo{1}{1}{1}{1}{◯◯部誌}
+%\printdate{1}{1}{1}
+%\staffinfo{編集担}{絵師たん}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 臨時追加パッケージ
+% 
+% 記事執筆者側で追加したいパッケージがあれば、以下に記入してください。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 臨時追加マクロ
+% 
+% 記事執筆者側で定義したマクロ (コマンド or 環境) があるなら、
+% 以下で定義してください。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 記事本文
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\pagestyle{headings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 「sample」部分を適切に変更する
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\utmcinclude{sample}
+
+\end{document}
+
